@@ -17,12 +17,12 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.PEMReader;
 import org.bouncycastle.util.encoders.Base64;
 
-public class Utils {
-	private Utils(){}
+public class ChefAuthUtils {
+	
+	private static final int SPLIT_AT = 60;
 	
 	public static String sha1AndBase64(String inStr) {
 		MessageDigest md = null;
-		String outStr = null;
 		byte[] outbty = null;
 		try {
 			md = MessageDigest.getInstance("SHA-1"); 
@@ -52,7 +52,6 @@ public class Utils {
 
 			byte[] signature = instance.sign();
 			outStr = Base64.encode(signature);
-			String tmp = new String(outStr);
 		} catch (InvalidKeyException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -66,15 +65,15 @@ public class Utils {
 	}
 	
 	public static String[] splitAs60(String inStr) {
-		int count = inStr.length() / 60;
+		int count = inStr.length() / SPLIT_AT;
 		String[] out = new String[count + 1];
 
 		for (int i = 0; i < count; i++) {
-			String tmp = inStr.substring(i * 60, i * 60 + 60);
+			String tmp = inStr.substring(i * SPLIT_AT, i * SPLIT_AT + SPLIT_AT);
 			out[i] = tmp;
 		}
-		if (inStr.length() > count * 60) {
-			String tmp = inStr.substring(count * 60, inStr.length());
+		if (inStr.length() > count * SPLIT_AT) {
+			String tmp = inStr.substring(count * SPLIT_AT, inStr.length());
 			out[count] = tmp;
 		}
 		return out;
